@@ -1,6 +1,6 @@
 /**
  * 用于备份插件的复制文件夹第三方库
- * 来源不明：若源作者看到，并不授权使用，请告知！
+ * 来源：https://github.com/otiai10/copy/blob/master/copy.go
  */
 
 package BackupPlugin
