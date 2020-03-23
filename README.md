@@ -2,7 +2,7 @@
 
 ## 用golang实现的Minecraft进程管理程序
 
-在windows10以及centos7中运行成功
+在windows10、centos7及ubuntu 18.04中运行成功
 
 -----
 
