@@ -8,12 +8,15 @@ import (
 	plugin "MCDaemon-go/plugins"
 	"bufio"
 	"fmt"
+	"github.com/otiai10/copy"
 	"io"
 	"log"
 	"net"
+	"os"
 	"os/exec"
 	"strconv"
 	"sync"
+	"time"
 )
 
 var err error
@@ -87,9 +90,9 @@ func (svr *Server) Restart() {
 	c.Group.Add(1)
 	//关闭
 	c.Del(svr.name)
+	time.Sleep(2e9)
 	//启动
-	workDir := svr.Cmd.Dir
-	c.Add(svr.name, workDir, svr)
+	c.Add("default", config.Cfg.Section("MCDeamon").Key("server_path").String(), svr)
 	c.Group.Done()
 }
 
@@ -149,6 +152,26 @@ func (svr *Server) CloseInContainer() {
 	c := container.GetInstance()
 	//关闭
 	c.Del(svr.name)
+}
+
+//回档
+func (svr *Server) Back(restorePath string) {
+	c := container.GetInstance()
+	c.Group.Add(1)
+	//关闭
+	c.Del(svr.name)
+	time.Sleep(5e9)
+	serverPath := config.Cfg.Section("MCDeamon").Key("server_path").String()
+	err = os.RemoveAll(serverPath)
+	if err !=nil {
+		return
+	}
+	if err := copy.Copy(restorePath, serverPath); err != nil {
+		lib.WriteDevelopLog("error", err.Error())
+	}
+	//启动
+	c.Add("default", config.Cfg.Section("MCDeamon").Key("server_path").String(), svr)
+	c.Group.Done()
 }
 
 //关闭服务器
