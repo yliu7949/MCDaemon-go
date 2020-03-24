@@ -7,7 +7,7 @@
 -----
 
 ## 开始使用
-- 下载最新的[release](https://github.com/TISUnion/MCDaemon-go/releases)(beta版不提供)
+- 下载最新的[release](https://github.com/yliu7949/MCDaemon-go/releases)(beta版不提供)
 ### 快速开始
 - 修改配置文件MCD_conf.ini
   - 解压最新版MCDaemon,进入并创建一个minecraft文件夹
@@ -38,6 +38,7 @@
 - 镜像管理插件：ImagePlugin
 - 加载热插件：hotPlugin
 - 多服务器聊天插件：ChatPlugin
+- 快速备份插件：QuickBackupY
 -----
 
 ## 插件编写
