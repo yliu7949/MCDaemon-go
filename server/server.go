@@ -174,6 +174,24 @@ func (svr *Server) Back(restorePath string) {
 	c.Group.Done()
 }
 
+//从内存读取字符串并使用正则表达式提取信息
+func (svr *Server) RegParser(reg string) ([]string, bool) {
+	var buffer []byte = make([]byte, 4096)
+	var svrStr string
+	re := regexp.MustCompile(reg)
+	for {
+		n, err := svr.Stdout.Read(buffer)
+		if err != nil {
+			return nil, false
+		}
+		svrStr = Buffer2String(buffer, n)
+		if re.MatchString(svrStr) {
+			break
+		}
+	}
+	return re.FindStringSubmatch(svrStr), true
+}
+
 //关闭服务器
 func (svr *Server) Close() {
 	// 关闭插件
