@@ -35,7 +35,7 @@ func (h *Here) Handle(c *command.Command, s lib.Server) {
 	}
 	p.PosX = p.PosX[0:len(p.PosX)-11]
 	p.PosZ = p.PosZ[0:len(p.PosZ)-11]
-	positionShow := p.Dim + " [x:" + p.PosX + ",y:" + p.PosY + ",z:" + p.PosZ + "]"
+	positionShow := p.Dim + " XYZ: " + p.PosX + " / " + p.PosY + " / " + p.PosZ
 	tp := "/tp " + p.PosX + " " + p.PosY + " " + p.PosZ
 	text := `/tellraw @a [{"text":"[Here]"},{"text":"`+c.Player+`","color":"gold"},{"text":"在"},{"text":"`+ positionShow +`","color":"gold",` +
 	`"clickEvent":{"action":"run_command","value":"`+tp+`"}}` +
