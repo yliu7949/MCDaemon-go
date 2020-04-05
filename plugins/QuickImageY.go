@@ -85,6 +85,7 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			sercfg.SaveTo(path)
 			cor.Add(c.Argv[1], "QuickImage/" + c.Argv[1], svr)
 		}
+		s.Say("镜像启动成功。")
 	case "show":
 		imageFiles, _ := filepath.Glob("QuickImage/*")
 		text := "QuickImage镜像列表：\\n"
