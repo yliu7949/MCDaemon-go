@@ -37,6 +37,7 @@
 - 加载热插件：hotPlugin
 - 多服务器聊天插件：ChatPlugin
 - 快速备份插件：QuickBackupY
+- 快速镜像插件：QuickImageY
 - 广播坐标插件：Here
 -----
 
