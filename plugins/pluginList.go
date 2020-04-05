@@ -1,7 +1,6 @@
 package plugin
 
 import (
-	"MCDaemon-go/plugins/BackupPlugin"
 	"MCDaemon-go/plugins/ChatPlugin"
 )
 
