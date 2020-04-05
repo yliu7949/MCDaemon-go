@@ -167,11 +167,11 @@ func (qb *QuickBackupY) Handle(c *command.Command, s lib.Server) {
 		s.Tell(c.Player, cleanBackUps(dataFileName, "QuickBackup/"))
 	case "comment":
 		if len(c.Argv) < 2 {
-			s.Tell(c.Player, "缺少参数，请加上指定的槽位数字！")
+			s.Tell(c.Player, "缺少参数，请加上指定的槽位数字和新的存档注释！")
 			return
 		}
 		if len(c.Argv) < 3{
-			s.Tell(c.Player, "缺少参数，请加上新的存档注释！")
+			s.Tell(c.Player, "缺少参数，请同时加上指定的槽位数字和新的存档注释！")
 		} else {
 			slot, err := strconv.Atoi(c.Argv[1])
 			if err != nil {

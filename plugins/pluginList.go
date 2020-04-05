@@ -16,14 +16,13 @@ func CreatePluginsList(isload bool) (PluginMap, PluginMap) {
 
 	//注册冷插件
 	PluginsList.RegisterPlugin("!!server", &BasePlugin{})                //基础插件
-	PluginsList.RegisterPlugin("!!backup", &BackupPlugin.BackupPlugin{}) //备份插件插件
 	PluginsList.RegisterPlugin("!!yinyinmaster", &Yinyin{})              //例子插件
-	PluginsList.RegisterPlugin("!!image", &ImagePlugin{})                //镜像插件
 	PluginsList.RegisterPlugin("!!SDChat", &SDChatPlugin{})              //沙雕聊天机器人插件
 	PluginsList.RegisterPlugin("!!tps", &TpsPlugin{})                    //tps插件
 	PluginsList.RegisterPlugin("!!Chat", &ChatPlugin.ChatPlugin{})       //跨服聊天插件
-	PluginsList.RegisterPlugin("!!autobk", &AutoBackup{})                // 自动备份插件
-	PluginsList.RegisterPlugin("!!qb", &QuickBackupY{})                  // 快速备份插件
+	PluginsList.RegisterPlugin("!!qb", &QuickBackupY{})                  //快速备份插件
+	PluginsList.RegisterPlugin("!!qi", &QuickImageY{})                   //快速镜像插件
+	PluginsList.RegisterPlugin("!!here", &Here{})                        //广播坐标插件
 
 	return PluginsList, DisablePluginsList
 }

@@ -8,6 +8,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"golang.org/x/text/encoding/simplifiedchinese"
@@ -67,6 +68,7 @@ func (svr *Server) Run() {
 		fmt.Println(svr.name, "服务器:", svrStr)
 		// 异步处理语法解析器和运行插件
 		go svr.RunParsers(svrStr)
+		time.Sleep(1e8)		//允许svr.Stdout.Read()被阻塞
 	}
 
 }

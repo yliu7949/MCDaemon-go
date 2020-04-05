@@ -2,7 +2,7 @@
 
 ## 用golang实现的Minecraft进程管理程序
 
-在windows10、centos7及ubuntu 18.04中运行成功
+在ubuntu 18.04中运行成功
 
 -----
 
@@ -12,7 +12,7 @@
 - 修改配置文件MCD_conf.ini
   - 解压最新版MCDaemon,进入并创建一个minecraft文件夹
   - 将下载MC服务端放入创建的minecraft文件夹内，重命名为server.jar
-- 运行start(linux/unix)或者start.exe（windows）
+- 运行start(linux/unix)
 - 在游戏中输入!!server help命令来查看命令帮助
 -----
 ## 配置文件
@@ -34,11 +34,10 @@
 - 栗子插件：ExampleYinyinPlugin
 - TPS查看插件：TpsPlugin
 - 沙雕聊天机器人插件：SDChatPlugin
-- 备份插件：BackupPlugin
-- 镜像管理插件：ImagePlugin
 - 加载热插件：hotPlugin
 - 多服务器聊天插件：ChatPlugin
 - 快速备份插件：QuickBackupY
+- 广播坐标插件：Here
 -----
 
 ## 插件编写
@@ -90,9 +89,11 @@
    - Tell 对某一个玩家发送消息，第二个参数玩家昵称，第三个为发送的消息字符串
    - Execute 执行一个原版MC命令
    - Close 关闭当前服务器实例对应服务器
+   - Back 执行回档操作
    - Restart 重启当前服务器实例对应服务器
    - Start 开启当前服务器实例里配置的服务器
    - ReloadConf 重新读取配置文件，加入热插件后需要重新读取配置文件才能生效
+   - RegParser 使用正则表达式主动地从输出流中提取字符串，该方法与解释器的功能类似
    - GetPluginList 获取可使用插件命令列表
    - GetDisablePluginList 获取被禁用插件列表
    - GetParserList 获取解释器插件列表
