@@ -34,8 +34,6 @@
 - 栗子插件：ExampleYinyinPlugin
 - TPS查看插件：TpsPlugin
 - 沙雕聊天机器人插件：SDChatPlugin
-- 备份插件：BackupPlugin
-- 镜像管理插件：ImagePlugin
 - 加载热插件：hotPlugin
 - 多服务器聊天插件：ChatPlugin
 - 快速备份插件：QuickBackupY
