@@ -39,6 +39,7 @@
 - 快速备份插件：QuickBackupY
 - 快速镜像插件：QuickImageY
 - 广播坐标插件：Here
+- 计算器插件：Calculator
 -----
 
 ## 插件编写
