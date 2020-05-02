@@ -3,6 +3,7 @@ module MCDaemon-go
 go 1.12
 
 require (
+	github.com/alfredxing/calc v0.0.0-20180827002445-77daf576f976
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
 	github.com/go-ini/ini v1.42.0
 	github.com/golang/protobuf v1.3.1
