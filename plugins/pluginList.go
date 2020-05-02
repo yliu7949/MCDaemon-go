@@ -22,6 +22,7 @@ func CreatePluginsList(isload bool) (PluginMap, PluginMap) {
 	PluginsList.RegisterPlugin("!!qb", &QuickBackupY{})                  //快速备份插件
 	PluginsList.RegisterPlugin("!!qi", &QuickImageY{})                   //快速镜像插件
 	PluginsList.RegisterPlugin("!!here", &Here{})                        //广播坐标插件
+	PluginsList.RegisterPlugin("!!calc", &Calculator{})                  //计算器插件
 
 	return PluginsList, DisablePluginsList
 }

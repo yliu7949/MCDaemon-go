@@ -10,6 +10,7 @@ import (
 	"MCDaemon-go/command"
 	"MCDaemon-go/container"
 	"MCDaemon-go/lib"
+	"fmt"
 	"github.com/go-ini/ini"
 	"github.com/otiai10/copy"
 	"github.com/tidwall/gjson"
@@ -17,6 +18,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 )
 
 type QuickImageY struct{}
@@ -25,7 +27,6 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 	if len(c.Argv) == 0 {
 		c.Argv = append(c.Argv, "help")
 	}
-	dir := "QuickBackup/"
 	qbDataFile := "QuickBackup/qb_data.json"
 	cor := container.GetInstance()
 	switch c.Argv[0] {
@@ -38,23 +39,8 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			s.Tell(c.Player,"参数不合法或无法找到有效存档！")
 		} else {
 			s.Tell(c.Player,"开始镜像...")
-			file, err := os.OpenFile(qbDataFile, os.O_RDWR|os.O_CREATE, os.ModePerm)
-			if err != nil {
-				s.Tell(c.Player,"数据文件打开失败！")
-				return
-			}
-			b, err := ioutil.ReadAll(file)
-			if err != nil {
-				s.Tell(c.Player,"数据读取失败！")
-				return
-			}
-			defer file.Close()
-			if err := copy.Copy(dir + gjson.Get(string(b), "Slot1.Name").String(), "QuickImage/" + c.Argv[1]); err != nil {
-				lib.WriteDevelopLog("error", err.Error())
-				s.Tell(c.Player,"文件复制失败！")
-				return
-			}
-			s.Tell(c.Player,"镜像添加成功。")
+			text, _ := addMirror(qbDataFile, c.Argv[1])
+			s.Tell(c.Player,text)
 		}
 	case "start":
 		if len(c.Argv) < 3 {
@@ -81,19 +67,26 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			path := "QuickImage/" + c.Argv[1] + "/server.properties"
 			svr := s.Clone(c.Argv[2])
 			sercfg, _ := ini.Load(path)
-			sercfg.Section("").NewKey("server-port", svr.GetPort())
+			rconPort, _ := strconv.Atoi(svr.GetPort())
+			rconPort = rconPort + 7
+			sercfg.Section("").NewKey("rcon.port", strconv.Itoa(rconPort))
+			sercfg.Section("").NewKey("gamemode", "creative")
 			sercfg.SaveTo(path)
 			cor.Add(c.Argv[1], "QuickImage/" + c.Argv[1], svr)
 		}
-		s.Say("镜像启动成功。")
+		s.Say("镜像" + c.Argv[1] + "启动成功，请耐心等待地图加载完成。")
 	case "show":
 		imageFiles, _ := filepath.Glob("QuickImage/*")
 		text := "QuickImage镜像列表：\\n"
-		for k, _ := range imageFiles {
-			if cor.IsRuntime(imageFiles[k]) {
-				text += imageFiles[k] + "  已启动  " + cor.Servers[imageFiles[k]].GetPort() + "\\n"
+		for _, image := range imageFiles {
+			if cor.IsRuntime(image[11:]) {
+				path := image + "/server.properties"
+				sercfg, _ := ini.Load(path)
+				rconPort := fmt.Sprintf("%s",sercfg.Section("").Key("rcon.port"))
+				serverPort := fmt.Sprintf("%s",sercfg.Section("").Key("server-port"))
+				text += image[11:] + "  已启动  " + serverPort + "  [RCON] : " + rconPort + "\\n"
 			} else {
-				text += imageFiles[k] + "  未启动  " + "\\n"
+				text += image[11:] + "  未启动  " + "\\n"
 			}
 		}
 		s.Tell(c.Player, text)
@@ -127,33 +120,133 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 				s.Tell(c.Player,"镜像删除成功。")
 			}
 		}
-	case "restart":
-		if len(c.Argv) < 3 {
-			s.Tell(c.Player, "缺少参数，请同时加上镜像名和端口号！")
+	case "update", "u":
+		if len(c.Argv) < 2 {
+			s.Tell(c.Player, "缺少要同步的镜像名称。")
 			return
 		}
-		port, err := strconv.Atoi(c.Argv[2])
-		if err != nil || port <= 0 {
-			s.Tell(c.Player, "参数不合法！")
+		if !checkFileIsExist("QuickImage/" +c.Argv[1]) {
+			s.Tell(c.Player,"镜像文件不存在！")
 			return
 		}
-		_commond1 := &command.Command{
-			Player: c.Player,
-			Cmd:    "qi",
-			Argv:    []string{"stop", c.Argv[1]},
+		path := "QuickImage/" + c.Argv[1] + "/server.properties"
+		sercfg, _ := ini.Load(path)
+		rconPort := fmt.Sprintf("%s",sercfg.Section("").Key("rcon.port"))
+		serverPort := fmt.Sprintf("%s",sercfg.Section("").Key("server-port"))
+		if cor.IsRuntime(c.Argv[1]) {
+			cor.Del(c.Argv[1])		//停止运行镜像
+			s.Tell(c.Player,"正在停止运行该镜像...")
 		}
-		_commond2 := &command.Command{
-			Player: c.Player,
-			Cmd:    "qi",
-			Argv:    []string{"start", c.Argv[1], c.Argv[2]},
+		if len(c.Argv) == 2 {
+			c.Argv = append(c.Argv, "all")
 		}
-		s.RunPlugin(_commond1)
-		s.RunPlugin(_commond2)
+		switch c.Argv[2] {
+		case "all", "a":
+			time.Sleep(1 * time.Second)
+			s.Tell(c.Player,"开始同步镜像...")
+			s.Tell(c.Player,"正在删除旧的镜像数据...")
+			err := os.RemoveAll("QuickImage/" + c.Argv[1])
+			if err != nil {
+				s.Tell(c.Player, "同步失败！在删除旧的镜像时出现了错误。")
+				return
+			}
+			s.Tell(c.Player, "正在写入新的镜像数据...")
+			if _, err := addMirror(qbDataFile, c.Argv[1]); err != nil {
+				s.Tell(c.Player, "同步失败！在写入新的镜像数据时出现了错误。")
+				return
+			}
+			sercfg, _ := ini.Load(path)
+			sercfg.Section("").NewKey("rcon.port", rconPort)
+			sercfg.Section("").NewKey("gamemode", "creative")
+			sercfg.SaveTo(path)
+			svr := s.Clone(serverPort)
+			cor.Add(c.Argv[1], "QuickImage/"+c.Argv[1], svr)
+			s.Tell(c.Player, "镜像同步成功！使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
+		case "world", "w":
+			time.Sleep(1 * time.Second)
+			s.Tell(c.Player,"开始同步镜像...")
+			s.Tell(c.Player,"正在删除旧的镜像数据...")
+			path = "QuickImage/" + c.Argv[1] + "/world/"
+			text, err := updateMirrorPartly(qbDataFile, "/world/", path)
+			if err != nil {
+				s.Tell(c.Player, text)
+			} else {
+				s.Tell(c.Player, text+"使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
+			}
+		case "nether", "n":
+			time.Sleep(1 * time.Second)
+			s.Tell(c.Player,"开始同步镜像...")
+			s.Tell(c.Player,"正在删除旧的镜像数据...")
+			path = "QuickImage/" + c.Argv[1] + "/world/DIM-1/"
+			text, err := updateMirrorPartly(qbDataFile, "/world/DIM-1/", path)
+			if err != nil {
+				s.Tell(c.Player, text)
+			} else {
+				s.Tell(c.Player, text+"使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
+			}
+		case "end", "e":
+			time.Sleep(1 * time.Second)
+			s.Tell(c.Player,"开始同步镜像...")
+			s.Tell(c.Player,"正在删除旧的镜像数据...")
+			path = "QuickImage/" + c.Argv[1] + "/world/DIM1/"
+			text, err := updateMirrorPartly(qbDataFile, "/world/DIM1/", path)
+			if err != nil {
+				s.Tell(c.Player, text)
+			} else {
+				s.Tell(c.Player, text+"使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
+			}
+		default:
+			text := "update命令用法示例：\\n!!qi update <镜像名> world 同步主世界\\n!!qi u <镜像名> w 同步主世界（简写命令）" +
+				"\\n!!qi update <镜像名> all 同步所有维度\\n"
+			s.Tell(c.Player, text)
+		}
+
 	default:
 		text := "使用规则：\\n!!qi add <镜像名> 添加镜像\\n!!qi start <镜像名> <port> 启动镜像 \\n!!qi show 查看镜像列表\\n" +
-			"!!qi stop <镜像名> 停止镜像\\n!!qi del <镜像名> 删除镜像\\n!!qi restart <镜像名> <port> 重启镜像\\n"
+			"!!qi stop <镜像名> 停止镜像\\n!!qi del <镜像名> 删除镜像\\n!!qi update <镜像名> [world/nether/end] 同步镜像\\n" +
+			"建议的镜像名及对应端口 MirrorY-25569 MirrorZ-25570\\n"
 		s.Tell(c.Player, text)
 	}
+}
+
+func addMirror(qbDataFile string, mirrorName string) (string, error) {
+	dir := "QuickBackup/"
+	file, err := os.OpenFile(qbDataFile, os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		return "数据文件打开失败！", err
+	}
+	b, err := ioutil.ReadAll(file)
+	if err != nil {
+		return "数据读取失败！", err
+	}
+	defer file.Close()
+	if err := copy.Copy(dir + gjson.Get(string(b), "Slot1.Name").String(), "QuickImage/" + mirrorName); err != nil {
+		return "文件复制失败！", err
+	}
+	return "镜像添加成功。", nil
+}
+
+func updateMirrorPartly(qbDataFile string, qbPath string, qiPath string) (string, error) {
+	file, err := os.OpenFile(qbDataFile, os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		return "数据文件打开失败！", err
+	}
+	b, err := ioutil.ReadAll(file)
+	if err != nil {
+		return "数据读取失败！", err
+	}
+	defer file.Close()
+	qbPath ="QuickBackup/" + gjson.Get(string(b), "Slot1.Name").String() + qbPath
+	dimData := [...]string{"data", "poi", "region"}
+	for _, dir := range dimData {
+		if err = os.RemoveAll(qiPath+dir); err != nil {
+			return "同步失败！在删除旧的镜像数据时出现了错误。", err
+		}
+		if err = copy.Copy(qbPath+dir, qiPath+dir); err != nil {
+			return "同步失败！在写入新的镜像数据时出现了错误。", err
+		}
+	}
+	return "镜像同步成功！", nil
 }
 
 func (qi *QuickImageY) Init(s lib.Server) {
