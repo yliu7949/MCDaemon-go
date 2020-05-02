@@ -1,4 +1,4 @@
-# MCDaemon-go
+# MCDaemon-go v2.4
 
 ## 用golang实现的Minecraft进程管理程序
 
