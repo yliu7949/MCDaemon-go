@@ -1,0 +1,13 @@
+language: go
+go:
+- '1.12'
+sudo: false
+
+script:
+- go mod tidy
+- go build
+
+notifications:
+  email:
+on_success: never
+on_failure: always
