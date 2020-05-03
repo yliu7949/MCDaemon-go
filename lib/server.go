@@ -10,7 +10,7 @@ type Server interface {
 	Execute(string)                          //执行mc原生命令
 	Close()                                  //关闭服务器（适用于单服务器）
 	CloseInContainer()                       //在容器中关闭服务器
-	Back(string)							 //回档
+	Back(string)				 //回档
 	Restart()                                //重启
 	Start(string, []string, string)          //开启一个服务器实例
 	Getinfo() string                         //获取服务器基本信息
