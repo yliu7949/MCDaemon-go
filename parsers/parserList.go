@@ -1,6 +1,6 @@
 package parser
 
-import "github.com/yliu7949/MCDaemon-go/lib"
+import "MCDaemon-go/lib"
 
 //语法解析器列表
 func CreateParserList() []lib.Parser {
@@ -8,8 +8,6 @@ func CreateParserList() []lib.Parser {
 		&SDChatParser{},
 		&ChatParser{},
 		&defaultParser{},
-		&BackupParser{},
 		&TpsParser{},
-		&AutoBackupParser{},
 	}
 }
