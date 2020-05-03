@@ -93,7 +93,7 @@ func (svr *Server) Restart() {
 	c.Del(svr.name)
 	time.Sleep(2e9)
 	//启动
-	c.Add(svr.name, config.Cfg.Section("MCDeamon").Key("server_path").String(), svr)
+	c.Add("default", config.Cfg.Section("MCDeamon").Key("server_path").String(), svr)
 	c.Group.Done()
 }
 
