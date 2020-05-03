@@ -1,22 +1,23 @@
 package server
 
 import (
-	"MCDaemon-go/config"
-	"MCDaemon-go/container"
-	"MCDaemon-go/lib"
-	parser "MCDaemon-go/parsers"
-	plugin "MCDaemon-go/plugins"
 	"bufio"
 	"fmt"
-	"github.com/otiai10/copy"
 	"io"
 	"log"
-	"net"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/otiai10/copy"
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/container"
+	"github.com/yliu7949/MCDaemon-go/lib"
+	parser "github.com/yliu7949/MCDaemon-go/parsers"
+	plugin "github.com/yliu7949/MCDaemon-go/plugins"
 )
 
 var err error
@@ -117,22 +118,9 @@ func (svr *Server) ReloadConf() {
 }
 
 //复制一个镜像服务器（用于镜像启动）
-func (svr *Server) Clone() lib.Server {
+func (svr *Server) Clone(port string) lib.Server {
 	cloneServer := &Server{}
-	// 得到一个可用的端口
-	port, _ := func() (string, bool) {
-		listener, err := net.Listen("tcp", "127.0.0.1:0")
-		if err != nil {
-			return "", false
-		}
-		defer listener.Close()
-		addr := listener.Addr().String()
-		_, portString, err := net.SplitHostPort(addr)
-		if err != nil {
-			return "", false
-		}
-		return portString, true
-	}()
+	// 设置端口
 	cloneServer.port = port
 	return cloneServer
 }

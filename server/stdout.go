@@ -42,7 +42,7 @@ func (svr *Server) Run() {
 	var buffer []byte = make([]byte, 4096)
 	var buffercmd []byte = make([]byte, 4096)
 	cmdin := bufio.NewReader(os.Stdin)
-	go func() {
+	go func() {						//使后台可以输入命令
 		for {
 			n, err := cmdin.Read(buffercmd)
 			if err != nil {
@@ -73,7 +73,7 @@ func (svr *Server) Run() {
 
 }
 
-// Buffer2String :从内存读取字符串
+// Buffer2String
 func Buffer2String(buffer []byte, n int) string {
 	var retStr string
 	//注意在window下minecraft进程间通信使用gbk2312;

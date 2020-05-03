@@ -5,20 +5,21 @@
 package plugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/config"
-	"MCDaemon-go/lib"
 	"bufio"
 	"fmt"
-	"github.com/otiai10/copy"
-	"github.com/tidwall/gjson"
-	"github.com/tidwall/sjson"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/otiai10/copy"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 type QuickBackupY struct {
@@ -267,7 +268,7 @@ func changeSlot(filename string, qb *QuickBackupY) string {
 	if err != nil {
 		return "写入备份失败"
 	}
-	return "备份完成"
+	return "完成"
 }
 
 func newSlot(filename string, Data string, qb *QuickBackupY) string {
@@ -285,7 +286,7 @@ func newSlot(filename string, Data string, qb *QuickBackupY) string {
 	if err != nil {
 		return "写入备份失败"
 	}
-	return "备份完成"
+	return "完成"
 }
 
 func checkSlot(filename string, slot int) bool {

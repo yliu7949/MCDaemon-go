@@ -1,11 +1,12 @@
 package plugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/lib"
 	"fmt"
 	"os/exec"
 	"strings"
+
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 //热加载插件类型

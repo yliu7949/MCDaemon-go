@@ -1,6 +1,6 @@
 package parser
 
-import "MCDaemon-go/lib"
+import "github.com/yliu7949/MCDaemon-go/lib"
 
 //语法解析器列表
 func CreateParserList() []lib.Parser {

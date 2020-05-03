@@ -4,7 +4,6 @@ go:
 sudo: false
 
 script:
-- go mod tidy
 - go build
 
 notifications:
