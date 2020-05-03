@@ -1,8 +1,8 @@
 package plugin
 
 import (
-	"MCDaemon-go/config"
-	"MCDaemon-go/lib"
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 type PluginMap map[string]lib.Plugin

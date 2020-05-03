@@ -1,10 +1,11 @@
 package parser
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/config"
 	"regexp"
 	"strings"
+
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/config"
 )
 
 //解析玩家输入文字，判断是否是命令 ， 实现了Parser接口

@@ -1,12 +1,12 @@
 package lib
 
 import (
-	"MCDaemon-go/config"
 	"fmt"
 	"os"
 	"time"
 
 	"github.com/sirupsen/logrus"
+	"github.com/yliu7949/MCDaemon-go/config"
 )
 
 var (

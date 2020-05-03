@@ -1,13 +1,13 @@
 package plugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/config"
-	"MCDaemon-go/lib"
 	"encoding/json"
+
 	"github.com/shiguanghuxian/txai" // 引入sdk
 	"github.com/tidwall/gjson"
-
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 type SDChatPlugin struct{}
@@ -49,7 +49,7 @@ func (hp *SDChatPlugin) Close() {
 
 //发出请求获取聊天回复
 func chat(question string) string {
-	txAi := txai.New("2130****99", "Sbp*********toEV", false)	// 创建sdk操作对象，前两个参数分别为App_ID和App_Key
+	txAi := txai.New("2130739099", "SbpPDbDZfwoTtoEV", false)	// 创建sdk操作对象
 	val, _ := txAi.NlpTextchatForText("10000",question)	// 调用对应腾讯ai接口的对应函数
 	js, _ := json.Marshal(val)
 	return gjson.Get(string(js), "data.answer").String()

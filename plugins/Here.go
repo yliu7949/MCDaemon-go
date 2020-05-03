@@ -1,16 +1,17 @@
 package plugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/lib"
 	"fmt"
 	"time"
+
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 type Here struct {
 	Dim 				string			//玩家所在的维度，"0":"主世界","-1":"地狱","1":"末地"
 	PosX				string			//玩家的x坐标
-	PosY            		string			//玩家的y坐标
+	PosY            	string			//玩家的y坐标
 	PosZ				string			//玩家的z坐标
 }
 

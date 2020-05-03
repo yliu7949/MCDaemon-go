@@ -7,18 +7,19 @@
 package plugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/container"
-	"MCDaemon-go/lib"
 	"fmt"
-	"github.com/go-ini/ini"
-	"github.com/otiai10/copy"
-	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/go-ini/ini"
+	"github.com/otiai10/copy"
+	"github.com/tidwall/gjson"
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/container"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 type QuickImageY struct{}
@@ -200,11 +201,16 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 				"\\n!!qi update <镜像名> all 同步所有维度\\n"
 			s.Tell(c.Player, text)
 		}
-
+	case "op":
+		if s.GetName() == "default" {
+			s.Tell(c.Player, "该命令仅在镜像服可用。")
+		} else {
+			s.Execute("/op " + c.Player)
+		}
 	default:
 		text := "使用规则：\\n!!qi add <镜像名> 添加镜像\\n!!qi start <镜像名> <port> 启动镜像 \\n!!qi show 查看镜像列表\\n" +
 			"!!qi stop <镜像名> 停止镜像\\n!!qi del <镜像名> 删除镜像\\n!!qi update <镜像名> [world/nether/end] 同步镜像\\n" +
-			"建议的镜像名及对应端口 MirrorY-25569 MirrorZ-25570\\n"
+			"!!qi op 获取op身份（仅镜像服可用）\\n建议使用的镜像名及对应端口 MirrorY-25569 MirrorZ-25570\\n"
 		s.Tell(c.Player, text)
 	}
 }

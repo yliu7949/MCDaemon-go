@@ -1,9 +1,10 @@
 package container
 
 import (
-	"MCDaemon-go/config"
-	"MCDaemon-go/lib"
 	"sync"
+
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 //单例模式

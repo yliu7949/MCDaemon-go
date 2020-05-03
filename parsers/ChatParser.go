@@ -1,8 +1,9 @@
 package parser
 
 import (
-	"MCDaemon-go/command"
 	"regexp"
+
+	"github.com/yliu7949/MCDaemon-go/command"
 )
 
 type ChatParser struct {

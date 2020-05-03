@@ -15,7 +15,8 @@
 minecraft*
 logs/*
 !.keep
-back-up/*
+QuickBackup/*
+QuickImage/*
 start
 *.rar
 *.log
