@@ -49,7 +49,7 @@ func (hp *SDChatPlugin) Close() {
 
 //发出请求获取聊天回复
 func chat(question string) string {
-	txAi := txai.New("2130739099", "SbpPDbDZfwoTtoEV", false)	// 创建sdk操作对象
+	txAi := txai.New("2********9", "S*************", false)	// 创建sdk操作对象
 	val, _ := txAi.NlpTextchatForText("10000",question)	// 调用对应腾讯ai接口的对应函数
 	js, _ := json.Marshal(val)
 	return gjson.Get(string(js), "data.answer").String()
