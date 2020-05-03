@@ -2,6 +2,7 @@
 
 ## 用golang实现的Minecraft进程管理程序
 
+[![Build Status](https://travis-ci.org/yliu7949/MCDaemon-go.svg?branch=master)](https://travis-ci.org/yliu7949/MCDaemon-go)  
 在ubuntu 18.04中运行成功
 
 -----

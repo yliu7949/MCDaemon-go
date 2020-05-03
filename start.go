@@ -1,9 +1,9 @@
 package main
 
 import (
-	"MCDaemon-go/config"
-	"MCDaemon-go/container"
-	"MCDaemon-go/server"
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/container"
+	"github.com/yliu7949/MCDaemon-go/server"
 )
 
 var (

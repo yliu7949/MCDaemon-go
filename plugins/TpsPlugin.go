@@ -1,10 +1,11 @@
 package plugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/lib"
 	"strconv"
 	"time"
+
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 type TpsPlugin struct{}

@@ -1,7 +1,7 @@
 package lib
 
 import (
-	"MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/command"
 )
 
 type Server interface {
@@ -14,7 +14,7 @@ type Server interface {
 	Restart()                                //重启
 	Start(string, []string, string)          //开启一个服务器实例
 	Getinfo() string                         //获取服务器基本信息
-	Clone() Server                           //克隆一个服务器实例
+	Clone(string) Server                     //克隆一个服务器实例
 	GetPort() string                         //获取服务器端口
 	ReloadConf()                             //重新获取配置
 	RunPlugin(*command.Command)              //运行一个插件命令

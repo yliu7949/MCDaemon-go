@@ -1,9 +1,10 @@
 package server
 
 import (
-	"MCDaemon-go/command"
 	"fmt"
 	"io"
+
+	"github.com/yliu7949/MCDaemon-go/command"
 )
 
 func (svr *Server) Say(argv ...interface{}) {

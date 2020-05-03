@@ -1,11 +1,11 @@
 package ChatPlugin
 
 import (
-	"MCDaemon-go/lib"
 	"context"
 	"fmt"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/yliu7949/MCDaemon-go/lib"
 	"golang.org/x/net/websocket"
 )
 

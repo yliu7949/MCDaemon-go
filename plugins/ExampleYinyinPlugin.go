@@ -7,9 +7,10 @@
 package plugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/lib"
 	"fmt"
+
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 type Yinyin struct {

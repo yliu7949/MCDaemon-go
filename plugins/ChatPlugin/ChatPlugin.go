@@ -1,14 +1,15 @@
 package ChatPlugin
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/config"
-	"MCDaemon-go/container"
-	"MCDaemon-go/lib"
 	"context"
 	"fmt"
 	"strings"
 	"sync"
+
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/container"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 var (

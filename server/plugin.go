@@ -1,11 +1,12 @@
 package server
 
 import (
-	"MCDaemon-go/command"
-	"MCDaemon-go/config"
-	"MCDaemon-go/lib"
 	"fmt"
 	"strings"
+
+	"github.com/yliu7949/MCDaemon-go/command"
+	"github.com/yliu7949/MCDaemon-go/config"
+	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
 //运行所有语法解析器
