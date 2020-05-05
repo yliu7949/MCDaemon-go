@@ -1,4 +1,4 @@
-module MCDaemon-go
+module github.com/yliu7949/MCDaemon-go
 
 go 1.12
 
