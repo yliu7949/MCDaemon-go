@@ -12,8 +12,8 @@ import (
 type WSClient struct {
 	ServerId       int    //服务器id
 	ServerName     string //服务器名称
-	addr           string
-	origin         string
+	Addr           string
+	Origin         string
 	ws             *websocket.Conn //websocket连接
 	ReceiveMessage chan *Message   //接受到的消息
 	Ctx            context.Context //上下文
@@ -23,7 +23,7 @@ type WSClient struct {
 func (this *WSClient) Start() error {
 	var err error
 
-	this.ws, err = websocket.Dial("ws://"+this.addr, "", this.origin)
+	this.ws, err = websocket.Dial("ws://"+this.Addr, "", this.Origin)
 	if err != nil {
 		lib.WriteDevelopLog("error", err.Error())
 		return err
