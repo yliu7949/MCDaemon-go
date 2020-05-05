@@ -137,8 +137,8 @@ func start() {
 		WSCli := &WSClient{
 			ServerId:       clientID,
 			ServerName:     LocalServerName,
-			addr:           plugincfg.Section("LinkChat.server").Key(v).String(),
-			origin:         "TISMCDGO://" + plugincfg.Section("LinkChat").Key("server_name").String(),
+			Addr:           plugincfg.Section("LinkChat.server").Key(v).String(),
+			Origin:         "TISMCDGO://" + plugincfg.Section("LinkChat").Key("server_name").String(),
 			ReceiveMessage: make(chan *Message, ChanMaxSize),
 			Ctx:            WSCliCtx,
 			Cancel:         cancel,
