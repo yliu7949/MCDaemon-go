@@ -18,7 +18,6 @@ var (
 	once            *sync.Once
 	packageChan     chan *msgPackage
 	pluginCtx       context.Context
-	pluginConcel    context.CancelFunc
 	LocalServerName string
 	IsStart         bool
 	FirstTouch      int64 = 1024
@@ -32,7 +31,7 @@ const MinecraftServerId int = -2
 
 func init() {
 	once = &sync.Once{}
-	pluginCtx, pluginConcel = context.WithCancel(context.Background())
+	pluginCtx, _ = context.WithCancel(context.Background())
 	packageChan = make(chan *msgPackage, ChanMaxSize)
 }
 
@@ -44,7 +43,7 @@ type msgPackage struct {
 
 type ChatPlugin struct{}
 
-func (this *ChatPlugin) Handle(c *command.Command, s lib.Server) {
+func (Cp *ChatPlugin) Handle(c *command.Command, s lib.Server) {
 	if len(c.Argv) < 1 {
 		c.Argv = append(c.Argv, "help")
 	}
@@ -76,7 +75,7 @@ func (this *ChatPlugin) Handle(c *command.Command, s lib.Server) {
 	}
 }
 
-func (this *ChatPlugin) Init(s lib.Server) {
+func (Cp *ChatPlugin) Init(s lib.Server) {
 	once.Do(func() {
 		ContainerName = s.GetName()
 		//开启服务器和连接服务器
@@ -89,7 +88,7 @@ func (this *ChatPlugin) Init(s lib.Server) {
 	})
 }
 
-func (this *ChatPlugin) Close() {
+func (Cp *ChatPlugin) Close() {
 }
 
 /**
@@ -207,10 +206,10 @@ func sendLocalServer(pkg *msgPackage) {
 			players := command.Group.GetPlayer()["ServersChat"]
 			for _, player := range players {
 				server.Tell(player,
-					command.Text{"[" + pkg.Msg.GetServerName() + "]", pkg.Msg.GetServerNameColor()},
-					command.Text{pkg.Msg.GetPlayer(), pkg.Msg.GetPlayerColor()},
-					command.Text{":", "white"},
-					command.Text{strings.Replace(pkg.Msg.GetMessage(), "\r", "", -1), pkg.Msg.GetMessageColor()},
+					command.Text{Text: "[" + pkg.Msg.GetServerName() + "]", Color: pkg.Msg.GetServerNameColor()},
+					command.Text{Text: "<" + pkg.Msg.GetPlayer() + ">", Color: pkg.Msg.GetPlayerColor()},
+					command.Text{Text: " "},
+					command.Text{Text: strings.Replace(pkg.Msg.GetMessage(), "\r", "", -1), Color: pkg.Msg.GetMessageColor()},
 				)
 			}
 		}

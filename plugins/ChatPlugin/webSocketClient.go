@@ -20,23 +20,27 @@ type WSClient struct {
 	Cancel         context.CancelFunc
 }
 
-func (this *WSClient) Start() error {
+func (WSC *WSClient) Start() error {
 	var err error
 
+<<<<<<< Updated upstream
 	this.ws, err = websocket.Dial("ws://"+this.Addr, "", this.Origin)
+=======
+	WSC.ws, err = websocket.Dial("ws://"+WSC.Addr, "", WSC.Origin)
+>>>>>>> Stashed changes
 	if err != nil {
 		lib.WriteDevelopLog("error", err.Error())
 		return err
 	}
-	defer this.ws.Close()
+	defer WSC.ws.Close()
 	defer lib.WriteDevelopLog("error", "连接")
-	this.Send(&Message{
+	WSC.Send(&Message{
 		ServerName: &LocalServerName,
 		State:      &FirstTouch,
 	})
 	for {
 		msg := make([]byte, 5096)
-		slen, err := this.ws.Read(msg) //此处阻塞，等待有数据可读
+		slen, err := WSC.ws.Read(msg) //此处阻塞，等待有数据可读
 		msg = msg[:slen]
 		if err != nil {
 			lib.WriteDevelopLog("error", fmt.Sprint("读取错误：", err))
@@ -53,50 +57,50 @@ func (this *WSClient) Start() error {
 			lib.WriteDevelopLog("error", "聊天服务器连接失败：不再白名单内！")
 			break
 		}
-		this.ReceiveMessage <- newMessage
+		WSC.ReceiveMessage <- newMessage
 	}
-	this.Cancel()
+	WSC.Cancel()
 	return err
 }
 
-func (this *WSClient) Send(msg *Message) {
+func (WSC *WSClient) Send(msg *Message) {
 	data, err := proto.Marshal(msg)
 	if err != nil {
 		lib.WriteDevelopLog("error", fmt.Sprint("加密错误：", err))
 		return
 	}
-	err = websocket.Message.Send(this.ws, data)
+	err = websocket.Message.Send(WSC.ws, data)
 	if err != nil {
-		lib.WriteDevelopLog("error", fmt.Sprint(this.GetName, "发送信息错误：", err))
+		lib.WriteDevelopLog("error", fmt.Sprint(WSC.GetName, "发送信息错误：", err))
 	}
 }
 
-func (this *WSClient) Read() {
+func (WSC *WSClient) Read() {
 	for {
 		select {
-		case <-this.Ctx.Done():
+		case <-WSC.Ctx.Done():
 			return
-		case msg := <-this.ReceiveMessage:
+		case msg := <-WSC.ReceiveMessage:
 			packageChan <- &msgPackage{
-				From: this.ServerId,
+				From: WSC.ServerId,
 				Msg:  msg,
 			}
 		}
 	}
 }
 
-func (this *WSClient) GetId() int {
-	return this.ServerId
+func (WSC *WSClient) GetId() int {
+	return WSC.ServerId
 }
 
-func (this *WSClient) GetName() string {
-	return this.ServerName
+func (WSC *WSClient) GetName() string {
+	return WSC.ServerName
 }
 
-func (this *WSClient) IsAlive() bool {
-	if this.ws != nil {
+func (WSC *WSClient) IsAlive() bool {
+	if WSC.ws != nil {
 		return true
 	}
-	this.Cancel()
+	WSC.Cancel()
 	return false
 }
