@@ -22,12 +22,7 @@ type WSClient struct {
 
 func (WSC *WSClient) Start() error {
 	var err error
-
-<<<<<<< Updated upstream
-	this.ws, err = websocket.Dial("ws://"+this.Addr, "", this.Origin)
-=======
 	WSC.ws, err = websocket.Dial("ws://"+WSC.Addr, "", WSC.Origin)
->>>>>>> Stashed changes
 	if err != nil {
 		lib.WriteDevelopLog("error", err.Error())
 		return err
