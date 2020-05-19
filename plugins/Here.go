@@ -2,8 +2,6 @@ package plugin
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/yliu7949/MCDaemon-go/command"
 	"github.com/yliu7949/MCDaemon-go/lib"
 )
@@ -47,14 +45,13 @@ func (h *Here) Handle(c *command.Command, s lib.Server) {
 }
 
 func GetPosition(playerName string, svr lib.Server, h *Here) *Here {
-	reg := `\[\d+:\d+:\d+\]\s+\[Server thread/INFO\]:\s+(?P<player>.+)\s+has the following entity data:\s+\[(?P<x>.+)d,\s+(?P<y>.+)d,\s+(?P<z>.+)d\]`
+	reg := `(?P<player>.+)\s+has the following entity data:\s+\[(?P<x>.+)d,\s+(?P<y>.+)d,\s+(?P<z>.+)d\]`
 	go func() {
-		time.Sleep(2e8)
 		svr.Execute("/data get entity " + playerName + " Pos")
 	}()
 	match, flag := svr.RegParser(reg)
 	if !flag {
-		fmt.Println("正则获取坐标失败。")
+		fmt.Println("获取坐标失败，请重新尝试。")
 		return h
 	}
 	h.PosX = match[2]
@@ -64,14 +61,13 @@ func GetPosition(playerName string, svr lib.Server, h *Here) *Here {
 }
 
 func GetDim(playerName string, svr lib.Server, h *Here) *Here {
-	reg := `\[\d+:\d+:\d+\]\s+\[Server thread/INFO\]:\s+(?P<player>.+)\s+has the following entity data:\s+(?P<dim>.+)`
+	reg := `(?P<player>.+)\s+has the following entity data:\s+(?P<dim>.+)`
 	go func() {
-		time.Sleep(2e8)
 		svr.Execute("/data get entity " + playerName + " Dimension")
 	}()
 	match, flag := svr.RegParser(reg)
 	if !flag {
-		fmt.Println("正则获取维度失败。")
+		fmt.Println("获取维度失败，请重新尝试。")
 		return h
 	}
 	h.Dim = match[2]

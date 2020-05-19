@@ -162,18 +162,20 @@ func (svr *Server) Back(restorePath string) {
 	c.Group.Done()
 }
 
-//从内存读取字符串并使用正则表达式提取信息
+//读取输出流字符串并使用正则表达式提取信息
 func (svr *Server) RegParser(reg string) ([]string, bool) {
-	var buffer []byte = make([]byte, 4096)
 	var svrStr string
 	re := regexp.MustCompile(reg)
-		for {
-			n, _ := svr.Stdout.Read(buffer)
-			svrStr = Buffer2String(buffer, n)
-			if re.MatchString(svrStr) {
-				return re.FindStringSubmatch(svrStr),true
-			}
+	t := time.Now()
+	for {
+		svrStr = ReadSvrStr()
+		if re.MatchString(svrStr) {
+			return re.FindStringSubmatch(svrStr),true
 		}
+		if time.Since(t) > 2*time.Second {
+			return re.FindStringSubmatch(svrStr),false
+		}
+	}
 }
 
 //关闭服务器

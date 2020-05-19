@@ -68,10 +68,11 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			path := "QuickImage/" + c.Argv[1] + "/server.properties"
 			svr := s.Clone(c.Argv[2])
 			sercfg, _ := ini.Load(path)
-			rconPort, _ := strconv.Atoi(svr.GetPort())
+			rconPort, _ := strconv.Atoi(c.Argv[2])
 			rconPort = rconPort + 7
-			sercfg.Section("").NewKey("rcon.port", strconv.Itoa(rconPort))
-			sercfg.Section("").NewKey("gamemode", "creative")
+			sercfg.Section("").Key("server-port").SetValue(c.Argv[2])
+			sercfg.Section("").Key("rcon.port").SetValue(strconv.Itoa(rconPort))
+			sercfg.Section("").Key("gamemode").SetValue("creative")
 			sercfg.SaveTo(path)
 			cor.Add(c.Argv[1], "QuickImage/" + c.Argv[1], svr)
 		}
@@ -157,8 +158,9 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 				return
 			}
 			sercfg, _ := ini.Load(path)
-			sercfg.Section("").NewKey("rcon.port", rconPort)
-			sercfg.Section("").NewKey("gamemode", "creative")
+			sercfg.Section("").Key("server-port").SetValue(serverPort)
+			sercfg.Section("").Key("rcon.port").SetValue(rconPort)
+			sercfg.Section("").Key("gamemode").SetValue("creative")
 			sercfg.SaveTo(path)
 			svr := s.Clone(serverPort)
 			cor.Add(c.Argv[1], "QuickImage/"+c.Argv[1], svr)
