@@ -2,7 +2,7 @@
 
 ## 用golang实现的Minecraft进程管理程序
 
-[![Build Status](https://travis-ci.org/yliu7949/MCDaemon-go.svg?branch=master)](https://travis-ci.org/yliu7949/MCDaemon-go)   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![Build Status](https://travis-ci.org/yliu7949/MCDaemon-go.svg?branch=master)](https://travis-ci.org/yliu7949/MCDaemon-go)
 
 在ubuntu 18.04中运行成功
 
@@ -35,13 +35,14 @@
 - 基础核心插件：BasePlugin
 - 栗子插件：ExampleYinyinPlugin
 - TPS查看插件：TpsPlugin
-- 沙雕聊天机器人插件：SDChatPlugin
+- 聊天机器人插件：SDChatPlugin
 - 加载热插件：hotPlugin
 - 多服务器聊天插件：ChatPlugin
 - 快速备份插件：QuickBackupY
 - 快速镜像插件：QuickImageY
 - 广播坐标插件：Here
 - 计算器插件：Calculator
+- 坐标记录插件：Landmark
 -----
 
 ## 插件编写
