@@ -123,7 +123,7 @@ func (qb *QuickBackupY) Handle(c *command.Command, s lib.Server) {
 			s.Say("12秒后将关闭服务器回档。")
 			ticker1 := time.NewTicker(time.Millisecond * 100)	//创建打点器1，每100毫秒触发一次
 			ticker2 := time.NewTicker(time.Second)				//创建打点器2，每秒触发一次
-			stopper := time.NewTimer(time.Second * 12)			//创建一个计时器, 10秒后触发
+			stopper := time.NewTimer(time.Second * 12)			//创建一个计时器, 12秒后触发
 			var i = 0
 			for {
 				// 多路复用通道
