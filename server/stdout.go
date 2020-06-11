@@ -17,7 +17,7 @@ import (
 //等待服务器加载完地图
 var svrStr string
 func (svr *Server) WaitEndLoading() bool {
-	var buffer []byte = make([]byte, 4096)
+	var buffer = make([]byte, 4096)
 	var retStr string
 	//运行子进程
 	svr.run_process()
@@ -96,3 +96,4 @@ func Buffer2String(buffer []byte, n int) string {
 func ReadSvrStr() string {
 	return svrStr
 }
+

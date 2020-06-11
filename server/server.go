@@ -35,6 +35,7 @@ type Server struct {
 	disablePluginList plugin.PluginMap //禁用插件列表
 	parserList        []lib.Parser     //语法解析器列表
 	port              string           //启动服务器端口
+	startResult		  int			   //启动服务器结果
 	unqiueLock        sync.Mutex       //堵塞插件执行池锁
 }
 
@@ -104,12 +105,19 @@ func (svr *Server) Start(name string, Argv []string, workDir string) {
 	//等待加载地图
 	if svr.WaitEndLoading() {
 		//正式运行MCD
+		svr.startResult = 1
 		svr.Run()
 	} else {
 		//没加载成功就释放同步锁
+		svr.startResult = -1
 		c := container.GetInstance()
 		c.Group.Done()
 	}
+}
+
+//获取服务器启动结果
+func (svr *Server) GetStartResult() int {
+	return svr.startResult
 }
 
 //重新读取配置文件
@@ -182,6 +190,7 @@ func (svr *Server) RegParser(reg string) ([]string, bool) {
 func (svr *Server) Close() {
 	// 关闭插件
 	svr.RunPluginClose()
+	svr.startResult = 0
 	svr.Execute("/stop")
 }
 

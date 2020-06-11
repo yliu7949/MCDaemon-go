@@ -25,4 +25,5 @@ type Server interface {
 	GetParserList() []Parser                 //获取语法解释器列表
 	RegParser(reg string) ([]string, bool)	 //从内存读取字符串并使用正则表达式提取信息
 	GetName() string                         //获取服务器名称
+	GetStartResult() int					 //获取服务器启动结果
 }

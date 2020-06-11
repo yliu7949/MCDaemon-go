@@ -75,8 +75,27 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			sercfg.Section("").Key("gamemode").SetValue("creative")
 			sercfg.SaveTo(path)
 			cor.Add(c.Argv[1], "QuickImage/" + c.Argv[1], svr)
+			t := time.Now()
+			s.Say("镜像" + c.Argv[1] + "正在启动中，请耐心等待地图加载完成...")
+			for {
+				if svr.GetStartResult() != 0 {
+					if svr.GetStartResult() == 1 {
+						s.Say("镜像" + c.Argv[1] + "启动成功，耗时" +
+							fmt.Sprintf("%v", time.Since(t).Truncate(time.Second)) + "。")
+						return
+					}
+					if svr.GetStartResult() == -1 {
+						s.Say("镜像" + c.Argv[1] + "启动失败。")
+						return
+					}
+				}
+				if time.Since(t) > 70*time.Second {
+					s.Say("镜像" + c.Argv[1] + "启动超时。")
+					return
+				}
+				time.Sleep(1*time.Second)
+			}
 		}
-		s.Say("镜像" + c.Argv[1] + "启动成功，请耐心等待地图加载完成。")
 	case "show":
 		imageFiles, _ := filepath.Glob("QuickImage/*")
 		text := "QuickImage镜像列表：\\n"
@@ -162,37 +181,23 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			sercfg.Section("").Key("rcon.port").SetValue(rconPort)
 			sercfg.Section("").Key("gamemode").SetValue("creative")
 			sercfg.SaveTo(path)
-			svr := s.Clone(serverPort)
-			cor.Add(c.Argv[1], "QuickImage/"+c.Argv[1], svr)
+			//svr := s.Clone(serverPort)
+			//cor.Add(c.Argv[1], "QuickImage/"+c.Argv[1], svr)
 			s.Tell(c.Player, "镜像同步成功！使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
-		case "world", "w":
+		case "world", "w", "nether", "n", "end", "e":
 			time.Sleep(1 * time.Second)
 			s.Tell(c.Player,"开始同步镜像...")
 			s.Tell(c.Player,"正在删除旧的镜像数据...")
-			path = "QuickImage/" + c.Argv[1] + "/world/"
-			text, err := updateMirrorPartly(qbDataFile, "/world/", path)
-			if err != nil {
-				s.Tell(c.Player, text)
-			} else {
-				s.Tell(c.Player, text+"使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
+			folder := map[string]string{
+				"w":"/world/",
+				"world":"/world/",
+				"n":"/world/DIM-1/",
+				"nether":"/world/DIM-1/",
+				"e":"/world/DIM1/",
+				"end":"/world/DIM1/",
 			}
-		case "nether", "n":
-			time.Sleep(1 * time.Second)
-			s.Tell(c.Player,"开始同步镜像...")
-			s.Tell(c.Player,"正在删除旧的镜像数据...")
-			path = "QuickImage/" + c.Argv[1] + "/world/DIM-1/"
-			text, err := updateMirrorPartly(qbDataFile, "/world/DIM-1/", path)
-			if err != nil {
-				s.Tell(c.Player, text)
-			} else {
-				s.Tell(c.Player, text+"使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
-			}
-		case "end", "e":
-			time.Sleep(1 * time.Second)
-			s.Tell(c.Player,"开始同步镜像...")
-			s.Tell(c.Player,"正在删除旧的镜像数据...")
-			path = "QuickImage/" + c.Argv[1] + "/world/DIM1/"
-			text, err := updateMirrorPartly(qbDataFile, "/world/DIM1/", path)
+			path = "QuickImage/" + c.Argv[1] + folder[c.Argv[2]]
+			text, err := updateMirrorPartly(qbDataFile, folder[c.Argv[2]], path)
 			if err != nil {
 				s.Tell(c.Player, text)
 			} else {
