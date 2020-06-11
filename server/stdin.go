@@ -8,10 +8,17 @@ import (
 )
 
 func (svr *Server) Say(argv ...interface{}) {
+	fmt.Print("[SYSTEM] ")
+	fmt.Println(argv...)
 	svr.Tell("@a", argv...)
 }
 
 func (svr *Server) Tell(player string, argv ...interface{}) {
+	if player == "ghost" {		//从后台运行插件命令时tell不再执行
+		fmt.Print("[SYSTEM] ")
+		fmt.Println(argv...)
+		return
+	}
 	var stringText string
 	var TextArray []command.Text
 	var _command string

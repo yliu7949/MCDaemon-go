@@ -8,6 +8,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"golang.org/x/text/encoding/simplifiedchinese"
@@ -42,20 +43,27 @@ func (svr *Server) Run() {
 	var buffer []byte = make([]byte, 4096)
 	var buffercmd []byte = make([]byte, 4096)
 	cmdin := bufio.NewReader(os.Stdin)
-	go func() {						//使后台可以输入命令
-		for {
-			n, err := cmdin.Read(buffercmd)
-			if err != nil {
-				break
+	if svr.name == "default" {
+		go func() {						//使后台可以输入命令,仅作用于default服务器
+			for {
+				n, err := cmdin.Read(buffercmd)
+				if err != nil {
+					break
+				}
+				cmdStr := Buffer2String(buffercmd, n)
+				if cmdStr[len(cmdStr)-1] == '\n' {
+					cmdStr = cmdStr[0 : len(cmdStr)-1]
+				}
+				if cmdStr[:2] == "!!" {
+					nowTime := time.Now().Format("15:04:05")
+					ghostStr := "[" + nowTime + "] [Server thread/INFO]: <ghost> " + cmdStr
+					go svr.RunParsers(ghostStr)
+				} else {
+					svr.Execute(cmdStr)
+				}
 			}
-			cmdStr := Buffer2String(buffercmd, n)
-			if cmdStr[len(cmdStr)-1] == '\n' {
-				cmdStr = cmdStr[0 : len(cmdStr)-1]
-			}
-			svr.Execute(cmdStr)
-		}
-	}()
-
+		}()
+	}
 	for {
 		n, err := svr.Stdout.Read(buffer)
 		if err != nil {
