@@ -159,7 +159,7 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			s.Tell(c.Player,"正在停止运行该镜像...")
 		}
 		if len(c.Argv) == 2 {
-			c.Argv = append(c.Argv, "all")
+			c.Argv = append(c.Argv, "help")
 		}
 		switch c.Argv[2] {
 		case "all", "a":
@@ -204,8 +204,8 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 				s.Tell(c.Player, text+"使用!!qi start "+c.Argv[1]+" "+serverPort+"命令来启动该镜像。")
 			}
 		default:
-			text := "update命令用法示例：\\n!!qi update <镜像名> world 同步主世界\\n!!qi u <镜像名> w 同步主世界（简写命令）" +
-				"\\n!!qi update <镜像名> all 同步所有维度\\n"
+			text := "update命令用法示例：\\n!!qi update <镜像名> [world/nether/end] 同步主世界/下界/末地\\n!!qi u <镜像名> [w/n/e] 同步主世界/下界/末地（简写命令）" +
+				"\\n!!qi update <镜像名> all 同步所有维度\\n!!qi u <镜像名> a 同步所有维度（简写命令）\\n"
 			s.Tell(c.Player, text)
 		}
 	case "op":
@@ -215,8 +215,9 @@ func (qi *QuickImageY) Handle(c *command.Command, s lib.Server) {
 			s.Execute("/op " + c.Player)
 		}
 	default:
+	case "help":
 		text := "使用规则：\\n!!qi add <镜像名> 添加镜像\\n!!qi start <镜像名> <port> 启动镜像 \\n!!qi show 查看镜像列表\\n" +
-			"!!qi stop <镜像名> 停止镜像\\n!!qi del <镜像名> 删除镜像\\n!!qi update <镜像名> [world/nether/end] 同步镜像\\n" +
+			"!!qi stop <镜像名> 停止镜像\\n!!qi del <镜像名> 删除镜像\\n!!qi update <镜像名> [world/nether/end/all] 同步镜像\\n" +
 			"!!qi op 获取op身份（仅镜像服可用）\\n建议使用的镜像名及对应端口 MirrorY-25569 MirrorZ-25570\\n"
 		s.Tell(c.Player, text)
 	}

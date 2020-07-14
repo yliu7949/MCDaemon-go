@@ -8,8 +8,8 @@ import (
 type PluginMap map[string]lib.Plugin
 
 //加载热插件
-func (pm PluginMap) GetHotPlugins(is_reload bool) {
-	plugins := config.GetPlugins(is_reload)
+func (pm PluginMap) GetHotPlugins(isReload bool) {
+	plugins := config.GetPlugins(isReload)
 	for k, v := range plugins {
 		pm[k] = &HotPlugin{v}
 	}

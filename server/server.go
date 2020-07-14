@@ -65,7 +65,9 @@ func (svr *Server) Init(name string, argv []string, workDir string) {
 	//执行插件init
 	for _, v := range svr.pluginList {
 		v.Init(svr)
+	//	PlayerJoin("",svr)
 	}
+
 	//设置端口
 	if svr.port == "" {
 		svr.port = "25565"
@@ -138,7 +140,7 @@ func (svr *Server) GetPort() string {
 	return svr.port
 }
 
-//获取服务器实例名称//获取端口
+//获取服务器实例名称
 func (svr *Server) GetName() string {
 	return svr.name
 }

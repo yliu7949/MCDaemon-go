@@ -13,11 +13,11 @@ type Server interface {
 	Back(string)				 //回档
 	Restart()                                //重启
 	Start(string, []string, string)          //开启一个服务器实例
-	Getinfo() string                         //获取服务器基本信息
 	Clone(string) Server                     //克隆一个服务器实例
 	GetPort() string                         //获取服务器端口
 	ReloadConf()                             //重新获取配置
-	RunPlugin(*command.Command)              //运行一个插件命令
+	RunPlugin(*command.Command)              //运行一个插件命令（结构体格式）
+	RunPluginCommand(string, string)		 //运行一个插件命令（字符串格式）
 	RunUniquePlugin(func())                  //在所有命令完成后执行
 	WriteLog(level string, msg string)       //写入日志
 	GetPluginList() map[string]Plugin        //获取可用插件列表

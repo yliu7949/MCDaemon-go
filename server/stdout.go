@@ -54,7 +54,7 @@ func (svr *Server) Run() {
 				if cmdStr[len(cmdStr)-1] == '\n' {
 					cmdStr = cmdStr[0 : len(cmdStr)-1]
 				}
-				if cmdStr[:2] == "!!" {
+				if cmdStr != "" && cmdStr[:2] == "!!" {
 					nowTime := time.Now().Format("15:04:05")
 					ghostStr := "[" + nowTime + "] [Server thread/INFO]: <ghost> " + cmdStr
 					go svr.RunParsers(ghostStr)

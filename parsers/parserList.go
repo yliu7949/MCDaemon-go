@@ -8,6 +8,5 @@ func CreateParserList() []lib.Parser {
 		&SDChatParser{},
 		&ChatParser{},
 		&defaultParser{},
-		&TpsParser{},
 	}
 }

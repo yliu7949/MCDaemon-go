@@ -39,3 +39,12 @@ func (c *defaultParser) Parsing(word string) (*command.Command, bool) {
 	}
 	return nil, false
 }
+
+func (c *defaultParser) TriggerParsing(word string) ([]string,bool){
+	re := regexp.MustCompile(`:\s+(?P<player>.+)\s+(?P<action>.+) the game`)
+	match := re.FindStringSubmatch(word)
+	if len(match) != 0 {
+		return match,true
+	}
+	return nil,false
+}

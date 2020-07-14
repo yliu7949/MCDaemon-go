@@ -50,6 +50,8 @@ const Data = `{
   }
 }`
 
+var qbIsMaking = false  //是否正在执行qb make命令
+
 func (qb *QuickBackupY) Handle(c *command.Command, s lib.Server) {
 	if len(c.Argv) == 0 {
 		c.Argv = append(c.Argv, "help")
@@ -57,8 +59,10 @@ func (qb *QuickBackupY) Handle(c *command.Command, s lib.Server) {
 	dataFileName := "QuickBackup/qb_data.json"		//数据文件名字
 	switch c.Argv[0] {
 	case "make":
-		nowDate := time.Now().Format("2006-01-02")
-		nowTime := time.Now().Format("15:04:05")
+		qbIsMaking = true
+		t := time.Now()
+		nowDate := t.Format("2006-01-02")
+		nowTime := t.Format("15:04:05")
 		qb.name = nowDate + "@" + nowTime
 		s.Say("开始快速备份...")
 		s.Execute("/save-all flush")
@@ -78,7 +82,9 @@ func (qb *QuickBackupY) Handle(c *command.Command, s lib.Server) {
 		} else {
 			result = newSlot(dataFileName, Data, qb)       //新的开始，新备份存放在槽位1
 		}
-		s.Say(result)
+		qbIsMaking = false
+		s.Say(result+"耗时"+
+			fmt.Sprintf("%v", time.Since(t).Truncate(time.Second)) + "。")
 	case "back":
 		if len(c.Argv) < 2 {
 			s.Tell(c.Player, "缺少参数，请加上指定的槽位数字！")
@@ -268,7 +274,7 @@ func changeSlot(filename string, qb *QuickBackupY) string {
 	if err != nil {
 		return "写入备份失败"
 	}
-	return "完成"
+	return "备份制作完成。"
 }
 
 func newSlot(filename string, Data string, qb *QuickBackupY) string {
@@ -286,7 +292,7 @@ func newSlot(filename string, Data string, qb *QuickBackupY) string {
 	if err != nil {
 		return "写入备份失败"
 	}
-	return "完成"
+	return "备份制作完成。"
 }
 
 func checkSlot(filename string, slot int) bool {
@@ -370,6 +376,9 @@ func tarBackUps(filename string) string {
 }
 
 func cleanBackUps(filename string, dir string) string {
+	if qbIsMaking {
+		return "备份期间无法执行清理操作！"
+	}
 	num := 0	//当前存档数
 	num2 := 0	//删除的存档数
 	names,err := filepath.Glob(filepath.Join(dir,"*"))		//获取指定目录下的文件名或目录名(包含路径)

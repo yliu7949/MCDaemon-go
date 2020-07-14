@@ -17,17 +17,32 @@ func (svr *Server) RunParsers(word string) {
 			//异步运行插件
 			svr.pulginPool <- 1
 			if cmd.Player != "" {
-				svr.WriteLog("info", fmt.Sprintf("玩家 %s 运行了 %s %s命令", cmd.Player, cmd.Cmd, strings.Join(cmd.Argv, " ")))
+				svr.WriteLog("info", fmt.Sprintf("玩家 %s 运行了 %s %s 命令", cmd.Player, cmd.Cmd, strings.Join(cmd.Argv, " ")))
 			}
 			go svr.RunPlugin(cmd)
 		}
 	}
+
 }
 
-//运行插件
+//运行插件命令（结构体格式）
 func (svr *Server) RunPlugin(cmd *command.Command) {
 	svr.pluginList[cmd.Cmd].Handle(cmd, svr)
 	<-svr.pulginPool
+}
+
+//运行插件命令（字符串格式）
+func (svr *Server) RunPluginCommand(player string, cmd string) bool{
+	cmdSlice := strings.Fields(cmd)
+	if len(cmdSlice) == 0 {
+		return false
+	}
+	svr.RunPlugin(&command.Command{
+		Player: player,
+		Argv:   cmdSlice[1:],
+		Cmd:    cmdSlice[0],
+	})
+	return true
 }
 
 //等待现有插件的完成并停止后面插件的运行，在执行相关操作

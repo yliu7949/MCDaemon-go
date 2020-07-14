@@ -8,15 +8,13 @@ import (
 )
 
 func (svr *Server) Say(argv ...interface{}) {
-	fmt.Print("[SYSTEM] ")
-	fmt.Println(argv...)
+	ghostPrintln(argv...)
 	svr.Tell("@a", argv...)
 }
 
 func (svr *Server) Tell(player string, argv ...interface{}) {
-	if player == "ghost" {		//从后台运行插件命令时tell不再执行
-		fmt.Print("[SYSTEM] ")
-		fmt.Println(argv...)
+	if player == "ghost" {		//从后台运行插件命令时tell将消息输出至后台
+		ghostPrintln(argv...)
 		return
 	}
 	var stringText string
@@ -52,5 +50,26 @@ func (svr *Server) Execute(_command string) {
 	_, err := io.WriteString(svr.stdin, _command)
 	if err != nil {
 		// fmt.Println("there is a error!", err)
+	}
+}
+
+func ghostPrintln(argv ...interface{}) {
+	fmt.Println("[SYSTEM]")
+	for _, v := range argv {
+		switch t := v.(type) {
+		case string:
+			for i := 1;i < len(t);i++ {
+				if t[i] == '\\' && t[i+1] == 'n' {
+					fmt.Println(t[:i])
+					t = t[i+2:]
+					i = 1
+				}
+			}
+			if t != "" {
+				fmt.Println(t)
+			}
+		default:
+			fmt.Println("不支持的消息类型。")
+		}
 	}
 }
