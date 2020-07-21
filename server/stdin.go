@@ -3,42 +3,43 @@ package server
 import (
 	"fmt"
 	"io"
-
-	"github.com/yliu7949/MCDaemon-go/command"
 )
 
 func (svr *Server) Say(argv ...interface{}) {
-	ghostPrintln(argv...)
+	TellGhost(argv...)
 	svr.Tell("@a", argv...)
 }
 
 func (svr *Server) Tell(player string, argv ...interface{}) {
-	if player == "ghost" {		//从后台运行插件命令时tell将消息输出至后台
-		ghostPrintln(argv...)
+	if player == "Ghost" {		//从后台运行插件命令时Tell函数仅会将消息输出至后台
+		TellGhost(argv...)
 		return
 	}
-	var stringText string
-	var TextArray []command.Text
-	var _command string
+	var (
+		jsonLists []MText
+		command string
+	)
 	for _, v := range argv {
 		switch t := v.(type) {
 		case string:
-			stringText = t
-		case []command.Text:
-			TextArray = append(TextArray, t...)
-		case command.Text:
-			TextArray = append(TextArray, t)
+			jsonLists = append(jsonLists,*MinecraftText(t))
+		case *MText:
+			jsonLists = append(jsonLists,*t)
 		default:
-			fmt.Println("不支持的消息类型")
+			fmt.Println("Tell函数出错：不支持的消息类型!")
 		}
 	}
-	if stringText != "" {
-		_command = fmt.Sprintf("/tellraw %s {\"text\":\"%s\"}", player, stringText)
-	} else if len(TextArray) != 0 {
-		_command, _ = command.JsonEncode(TextArray)
-		_command = fmt.Sprintf("/tellraw %s %s", player, _command)
+	if len(jsonLists) == 1 {
+		command = "tellraw " + player + " " + fmt.Sprintf("%s",jsonLists[0])
+		svr.Execute(command)
+	} else {
+		command = "tellraw " + player + " ["
+		for _,json := range jsonLists {
+			command += fmt.Sprintf("%s",json) + ","
+		}
+		command += "]"
+		svr.Execute(command)
 	}
-	svr.Execute(_command)
 }
 
 func (svr *Server) Execute(_command string) {
@@ -49,11 +50,12 @@ func (svr *Server) Execute(_command string) {
 	defer svr.lock.Unlock()
 	_, err := io.WriteString(svr.stdin, _command)
 	if err != nil {
-		// fmt.Println("there is a error!", err)
+		 fmt.Println("Execute函数出错：", err)
 	}
 }
 
-func ghostPrintln(argv ...interface{}) {
+//将参数传入的消息去掉交互和颜色样式，并在后台(Ghost)中输出。
+func TellGhost(argv ...interface{}) {
 	fmt.Println("[SYSTEM]")
 	for _, v := range argv {
 		switch t := v.(type) {
