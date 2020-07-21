@@ -8,8 +8,6 @@ package plugin
 import (
 	"github.com/yliu7949/MCDaemon-go/command"
 	"github.com/yliu7949/MCDaemon-go/lib"
-
-	. "github.com/yliu7949/MCDaemon-go/server"
 )
 
 type BasePlugin struct {
@@ -21,7 +19,7 @@ func (hp *BasePlugin) Handle(c *command.Command, s lib.Server) {
 	}
 	switch c.Argv[0] {
 	case "test":
-		s.Tell(c.Player, MinecraftText("§b这是一个").SetHoverText("§6这是一个"),"§l§o测试")
+		s.Tell(c.Player, command.MinecraftText("§b这是一个").SetHoverText("§6这是一个"),"§l§o测试")
 	case "restart":
 		s.Restart()
 	case "stop":

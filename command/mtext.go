@@ -1,4 +1,4 @@
-package server
+package command
 
 import "fmt"
 
@@ -12,7 +12,7 @@ type MText []string
 4.open_url
 5.copy_to_clipboard(1.15+)
 */
-func (mt *MText) SetClickEvent(action string, value string) *MText{
+func (mt *MText) SetClickEvent(action string, value string) *MText {
 	var aimJsonList []string
 	for _,Json := range *mt {
 		Json = Json[:len(Json)-1] + `,"clickEvent":{"action":"` + action + `","value":"` + value + `"}}`
@@ -22,7 +22,7 @@ func (mt *MText) SetClickEvent(action string, value string) *MText{
 	return mt
 }
 
-func (mt *MText) SetHoverText(value string) *MText{
+func (mt *MText) SetHoverText(value string) *MText {
 	var aimJsonList []string
 	for _,Json := range *mt {
 		Json = Json[:len(Json)-1] + `,"hoverEvent":{"action":"show_text","value":"` + value + `"}}`
@@ -33,7 +33,7 @@ func (mt *MText) SetHoverText(value string) *MText{
 }
 
 //对文字的颜色和样式进行json编码
-func MinecraftText(text string) *MText{
+func MinecraftText(text string) *MText {
 	var (
 		aimJsonList []string//存放所有颜色作用域对应的json文本的列表
 		aimJson string		//存放一个颜色作用域内对应的json文本

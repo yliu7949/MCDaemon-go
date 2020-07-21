@@ -3,6 +3,8 @@ package server
 import (
 	"fmt"
 	"io"
+
+	c "github.com/yliu7949/MCDaemon-go/command"
 )
 
 func (svr *Server) Say(argv ...interface{}) {
@@ -16,14 +18,14 @@ func (svr *Server) Tell(player string, argv ...interface{}) {
 		return
 	}
 	var (
-		jsonLists []MText
+		jsonLists []c.MText
 		command string
 	)
 	for _, v := range argv {
 		switch t := v.(type) {
 		case string:
-			jsonLists = append(jsonLists,*MinecraftText(t))
-		case *MText:
+			jsonLists = append(jsonLists,*c.MinecraftText(t))
+		case *c.MText:
 			jsonLists = append(jsonLists,*t)
 		default:
 			fmt.Println("Tell函数出错：不支持的消息类型!")
