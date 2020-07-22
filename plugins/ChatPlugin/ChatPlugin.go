@@ -206,11 +206,9 @@ func sendLocalServer(pkg *msgPackage) {
 			players := command.Group.GetPlayer()["ServersChat"]
 			for _, player := range players {
 				server.Tell(player,
-					command.Text{Text: "[" + pkg.Msg.GetServerName() + "]", Color: pkg.Msg.GetServerNameColor()},
-					command.Text{Text: "<" + pkg.Msg.GetPlayer() + ">", Color: pkg.Msg.GetPlayerColor()},
-					command.Text{Text: " "},
-					command.Text{Text: strings.Replace(pkg.Msg.GetMessage(), "\r", "", -1), Color: pkg.Msg.GetMessageColor()},
-				)
+					"[" + pkg.Msg.GetServerName() + "] ",
+					"<" + pkg.Msg.GetPlayer() + "> ",
+					strings.Replace(pkg.Msg.GetMessage(), "\r", "", -1))
 			}
 		}
 	}
