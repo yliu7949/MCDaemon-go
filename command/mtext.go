@@ -41,6 +41,7 @@ func MinecraftText(text string) *MText {
 		color string
 		styles []string
 	)
+	text += "§"	//在字符串末尾添加一个"§"
 	colorDict := map[string]string{
 		"§0":"black",
 		"§1":"dark_blue",
@@ -67,12 +68,10 @@ func MinecraftText(text string) *MText {
 		"§m":"strikethrough",
 		"§k":"obfuscated",
 	}
-	text += "§"	//在字符串末尾添加一个"§"
 	frontCharSpecial := false //若前一个字符是'§'则为true
-	for i:=0; i<=len(text)-1; i++ {
-		if text[i] == '§' {
+	for _,letter := range text {
+		if letter == '§' {
 			frontCharSpecial = true
-			colorField = colorField[:len(colorField)-1]
 			if colorField != "" {
 				aimJson = fmt.Sprintf("{\"text\":\"%s\"",colorField)
 				if color != "" {
@@ -92,14 +91,14 @@ func MinecraftText(text string) *MText {
 			continue
 		}
 		if frontCharSpecial == false {
-			colorField += text[i:i+1]
+			colorField += string(letter)
 		} else {
 			frontCharSpecial = false
-			if colorDict["§"+text[i:i+1]] != "" {
-				color = colorDict["§"+text[i:i+1]]
+			if colorDict["§"+string(letter)] != "" {
+				color = colorDict["§"+string(letter)]
 			}
-			if styleDict["§"+text[i:i+1]] != "" {
-				styles = append(styles,styleDict["§"+text[i:i+1]])
+			if styleDict["§"+string(letter)] != "" {
+				styles = append(styles,styleDict["§"+string(letter)])
 			}
 		}
 	}
