@@ -66,7 +66,7 @@ func (qb *QuickBackupY) Handle(c *command.Command, s lib.Server) {
 		qb.name = nowDate + "@" + nowTime
 		s.Say("开始快速备份...")
 		s.Execute("/save-all flush")
-		serverPath := config.Cfg.Section("MCDeamon").Key("server_path").String()
+		serverPath := config.Cfg.Section("MCDaemon").Key("server_path").String()
 		if err := copy.Copy(serverPath, "QuickBackup/"+qb.name); err != nil {
 			lib.WriteDevelopLog("error", err.Error())
 		}

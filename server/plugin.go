@@ -51,7 +51,7 @@ func (svr *Server) RunUniquePlugin(handle func()) {
 	defer svr.unqiueLock.Unlock()
 	<-svr.pulginPool
 	//根据插件最大并发数进行堵塞
-	maxRunPlugins, _ := config.Cfg.Section("MCDeamon").Key("maxRunPlugins").Int()
+	maxRunPlugins, _ := config.Cfg.Section("MCDaemon").Key("maxRunPlugins").Int()
 	for i := 0; i < maxRunPlugins; i++ {
 		svr.pulginPool <- 1
 	}

@@ -2,7 +2,9 @@ package plugin
 
 import (
 	"fmt"
-	"github.com/yliu7949/MCDaemon-go/command"
+	"strings"
+
+	. "github.com/yliu7949/MCDaemon-go/command"
 	"github.com/yliu7949/MCDaemon-go/lib"
 )
 
@@ -14,13 +16,13 @@ type Here struct {
 }
 
 
-func (h *Here) Handle(c *command.Command, s lib.Server) {
+func (h *Here) Handle(c *Command, s lib.Server) {
 	p := GetDim(c.Player, s, h)
 	switch p.Dim {
 	case "0":
 		p.Dim = "主世界"
 	case "-1":
-		p.Dim = "地狱"
+		p.Dim = "下界"
 	case "1":
 		p.Dim = "末地"
 	default:
@@ -32,14 +34,9 @@ func (h *Here) Handle(c *command.Command, s lib.Server) {
 		s.Tell(c.Player, "获取坐标失败。")
 		return
 	}
-	p.PosX = p.PosX[0:len(p.PosX)-11]
-	p.PosZ = p.PosZ[0:len(p.PosZ)-11]
 	positionShow := p.Dim + " XYZ: " + p.PosX + " / " + p.PosY + " / " + p.PosZ
 	tp := "/tp " + p.PosX + " " + p.PosY + " " + p.PosZ
-	text := `/tellraw @a [{"text":"[Here]"},{"text":"`+c.Player+`","color":"gold"},{"text":"在"},{"text":"`+ positionShow +`","color":"gold",` +
-	`"clickEvent":{"action":"run_command","value":"`+tp+`"}}` +
-	`,{"text":"向大家打招呼！"}]`
-	s.Execute(text)
+	s.Say("§b"+c.Player,"在",MinecraftText("§6"+positionShow).SetClickEvent("run_command",tp),"向大家打招呼！")
 	s.Execute("/effect give " + c.Player + " minecraft:glowing 30 1 true")
 
 }
@@ -57,6 +54,9 @@ func GetPosition(playerName string, svr lib.Server, h *Here) *Here {
 	h.PosX = match[2]
 	h.PosY = match[3]
 	h.PosZ = match[4]
+	h.PosX = strings.Split(h.PosX, ".")[0] + "." + strings.Split(h.PosX, ".")[1][:1]
+	h.PosY = strings.Split(h.PosY, ".")[0] + "." + strings.Split(h.PosY, ".")[1][:1]
+	h.PosZ = strings.Split(h.PosZ, ".")[0] + "." + strings.Split(h.PosZ, ".")[1][:1]
 	return h
 }
 

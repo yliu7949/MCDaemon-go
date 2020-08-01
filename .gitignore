@@ -12,11 +12,11 @@
 *.out
 
 #minecraft
-minecraft*
+minecraft/
 logs/*
 !.keep
-QuickBackup/*
-QuickImage/*
+QuickBackup/
+QuickImage/
 start
 *.rar
 *.log

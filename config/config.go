@@ -27,7 +27,7 @@ func init() {
 //获取服务器启动配置
 func GetStartConfig() []string {
 	//读取配置
-	Section := Cfg.Section("MCDeamon")
+	Section := Cfg.Section("MCDaemon")
 	serverName := Section.Key("server_name").String()
 	// serverPath := Section.Key("server_path").String()
 	//设置默认值
@@ -123,7 +123,7 @@ func GetPluginCfg(is_rebuild bool) *ini.File {
 }
 
 func SetEula() {
-	path := fmt.Sprintf("%s/eula.txt", Cfg.Section("MCDeamon").Key("server_path").String())
+	path := fmt.Sprintf("%s/eula.txt", Cfg.Section("MCDaemon").Key("server_path").String())
 	eulaCfg, eulaerr := ini.Load(path)
 	//不存在eula.txt
 	if eulaerr != nil {

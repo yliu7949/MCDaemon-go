@@ -56,7 +56,7 @@ func (svr *Server) Init(name string, argv []string, workDir string) {
 		log.Fatal(err)
 	}
 	//初始化插件执行池参数
-	svr.maxRunPlugins, _ = strconv.Atoi(config.Cfg.Section("MCDeamon").Key("maxRunPlugins").String())
+	svr.maxRunPlugins, _ = strconv.Atoi(config.Cfg.Section("MCDaemon").Key("maxRunPlugins").String())
 	svr.pulginPool = make(chan interface{}, svr.maxRunPlugins)
 
 	//初始化插件列表
@@ -96,7 +96,7 @@ func (svr *Server) Restart() {
 	c.Del(svr.name)
 	time.Sleep(2e9)
 	//启动
-	c.Add("default", config.Cfg.Section("MCDeamon").Key("server_path").String(), svr)
+	c.Add("default", config.Cfg.Section("MCDaemon").Key("server_path").String(), svr)
 	c.Group.Done()
 }
 
@@ -159,7 +159,7 @@ func (svr *Server) Back(restorePath string) {
 	//关闭
 	c.Del(svr.name)
 	time.Sleep(5e9)
-	serverPath := config.Cfg.Section("MCDeamon").Key("server_path").String()
+	serverPath := config.Cfg.Section("MCDaemon").Key("server_path").String()
 	err = os.RemoveAll(serverPath)
 	if err !=nil {
 		return
@@ -168,7 +168,7 @@ func (svr *Server) Back(restorePath string) {
 		lib.WriteDevelopLog("error", err.Error())
 	}
 	//启动
-	c.Add("default", config.Cfg.Section("MCDeamon").Key("server_path").String(), svr)
+	c.Add("default", config.Cfg.Section("MCDaemon").Key("server_path").String(), svr)
 	c.Group.Done()
 }
 
