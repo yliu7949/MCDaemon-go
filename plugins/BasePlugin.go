@@ -18,8 +18,6 @@ func (hp *BasePlugin) Handle(c *command.Command, s lib.Server) {
 		c.Argv = append(c.Argv, "help")
 	}
 	switch c.Argv[0] {
-	case "test":
-		s.Tell(c.Player, command.MinecraftText("§b这是一个").SetHoverText("§6这是一个"),"§l§o测试")
 	case "restart":
 		s.Restart()
 	case "stop":

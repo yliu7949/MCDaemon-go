@@ -369,7 +369,7 @@ func tarBackUps(filename string) string {
 	}
 	cmd := exec.Command("tar", "zcvf", "/OBS/" + tarFilesName + ".tar.gz", "QuickBackup/" + tarFilesName)
 	if err := cmd.Run(); err != nil {
-		return "压缩姬出问题了，压缩失败！ "
+		return "压缩姬出问题了，压缩失败！"
 	} else {
 		return "压缩备份完成，存储成功！"
 	}

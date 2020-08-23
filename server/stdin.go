@@ -32,14 +32,21 @@ func (svr *Server) Tell(player string, argv ...interface{}) {
 		}
 	}
 	if len(jsonLists) == 1 {
-		command = fmt.Sprintf("%s",jsonLists[0])
-		command = "tellraw " + player + " " + command[1:len(command)-1]
+		for _,j := range jsonLists[0] {
+			command +=  fmt.Sprintf("%s",j)+ ","
+		}
+		if len(jsonLists[0]) == 1 {
+			command = "tellraw " + player + " " + command[:len(command)-1]
+		} else {
+			command = "tellraw " + player + ` ["",` + command[:len(command)-1] + "]"
+		}
 		svr.Execute(command)
 	} else {
 		command = "tellraw " + player + ` ["",`
 		for _,json := range jsonLists {
-			_command := fmt.Sprintf("%s",json)
-			command +=  _command[1:len(_command)-1]+ ","
+			for _,j := range json {
+				command +=  fmt.Sprintf("%s",j)+ ","
+			}
 		}
 		command =command[:len(command)-1] + "]"
 		svr.Execute(command)
