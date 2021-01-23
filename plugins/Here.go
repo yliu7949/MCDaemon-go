@@ -17,13 +17,17 @@ type Here struct {
 
 
 func (h *Here) Handle(c *Command, s lib.Server) {
+	if len(c.Argv) != 0 {
+		c.Player = c.Argv[0]
+	}
+
 	p := GetDim(c.Player, s, h)
 	switch p.Dim {
-	case "0", `minecraft:overworld`:
+	case "minecraft:overworld":
 		p.Dim = "主世界"
-	case "-1", `minecraft:the_nether`:
+	case "minecraft:the_nether":
 		p.Dim = "下界"
-	case "1", `minecraft:the_end`:
+	case "minecraft:the_end":
 		p.Dim = "末地"
 	default:
 		s.Tell(c.Player, "获取维度失败。")
@@ -73,6 +77,13 @@ func GetDim(playerName string, svr lib.Server, h *Here) *Here {
 	h.Dim = match[2]
 	if len(h.Dim) > 1 {
 		h.Dim = h.Dim[1:len(h.Dim)-1]
+	} else {
+		tmp := map[string]string{
+			"0": "minecraft:overworld",
+			"1": "minecraft:the_end",
+			"-1": "minecraft:the_nether",
+		}
+		h.Dim = tmp[h.Dim]
 	}
 	return h
 }

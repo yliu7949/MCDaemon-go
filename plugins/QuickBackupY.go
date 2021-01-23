@@ -51,8 +51,10 @@ const Data = `{
 }`
 
 var qbIsMaking = false  //是否正在执行qb make命令
+var serverName string
 
 func (qb *QuickBackupY) Handle(c *command.Command, s lib.Server) {
+	serverName = s.GetName()
 	if len(c.Argv) == 0 {
 		c.Argv = append(c.Argv, "help")
 	}
@@ -239,6 +241,17 @@ func checkFileIsExist(filename string) bool {
 	return exist
 }
 
+func calculateDirSize(path string) (int64, error) {
+	var size int64
+	err := filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			size += info.Size()
+		}
+		return err
+	})
+	return size, err
+}
+
 func changeSlot(filename string, qb *QuickBackupY) string {
 	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
@@ -337,8 +350,10 @@ func listBackUps(filename string) string {
 	for i := 1; i <= 4; i++ {
 		text += "<" + strconv.Itoa(i) + ">  "
 		if gjson.Get(k, "Slot"+strconv.Itoa(i)+".Flag").Bool() {
+			size, _ := calculateDirSize(`QuickBackup/`+gjson.Get(k, "Slot"+strconv.Itoa(i)+".Name").String()+`/`)
 			text += gjson.Get(k, "Slot"+strconv.Itoa(i)+".Name").String() + "  "
-			text += gjson.Get(k, "Slot"+strconv.Itoa(i)+".Comment").String() + "\\n"
+			text += gjson.Get(k, "Slot"+strconv.Itoa(i)+".Comment").String() + "  "
+			text += fmt.Sprintf("%dMB", size/1024/1024) + "\\n"
 		} else {
 			text += "<空>  <空>\\n"
 		}
@@ -367,7 +382,7 @@ func tarBackUps(filename string) string {
 	if checkFileIsExist("/OBS/" + tarFilesName + ".tar.gz") {
 		return "OBS已存储最新存档，无需重复存储。"
 	}
-	cmd := exec.Command("tar", "zcvf", "/OBS/" + tarFilesName + ".tar.gz", "QuickBackup/" + tarFilesName)
+	cmd := exec.Command("tar", "zcvf", fmt.Sprintf(`/OBS/%s_%s.tar.gz`, tarFilesName, serverName), "QuickBackup/" + tarFilesName)
 	if err := cmd.Run(); err != nil {
 		return "压缩姬出问题了，压缩失败！"
 	} else {
