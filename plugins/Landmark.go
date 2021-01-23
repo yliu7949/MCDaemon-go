@@ -39,12 +39,12 @@ func (lm *Landmark) Handle(c *Command, s lib.Server) {
 		} else {
 			dim := ""
 			switch c.Argv[1] {
-			case "world","w","0":
-				dim = "0"
-			case "end","e","1":
-				dim = "1"
-			case "nether","n","-1":
-				dim = "-1"
+			case "world","w","0","overworld":
+				dim = "minecraft:overworld"
+			case "end","e","1","the_end":
+				dim = "minecraft:the_end"
+			case "nether","n","-1","the_nether":
+				dim = "minecraft:the_nether"
 			default:
 				s.Tell(c.Player, "参数中的世界维度有误!")
 				return
@@ -113,22 +113,19 @@ func (lm *Landmark) Handle(c *Command, s lib.Server) {
 			position = position[1:len(position)-1]
 			var hoverText string
 			switch dim {
-			case "0":
-				hoverText = "主世界 " + position
-				dim = "overworld"
-			case "-1":
-				hoverText = "下界 " + position
-				dim = "the_nether"
-			case "1":
-				hoverText = "末地 " + position
-				dim = "the_end"
+			case "minecraft:overworld":
+				hoverText = "主世界：" + position
+			case "minecraft:the_end":
+				hoverText = "末地：" + position
+			case "minecraft:the_nether":
+				hoverText = "下界：" + position
 			}
 			spawnCmd := "/player Bot" + strconv.Itoa(n+1) + " spawn at " + position + " facing 0 0 in " + dim
 			killCmd := "/player Bot" + strconv.Itoa(n+1) + " kill"
 			renameCmd := "!!lm rename " + landmark + " "
 			delCmd := "!!lm del " + landmark
 			s.Tell(c.Player,"§e<"+strconv.Itoa(n+1)+">",
-				MinecraftText("§7"+landmark).SetHoverText("§6"+hoverText).SetClickEvent("run_command","[分享] "+landmark+"："+hoverText),
+				MinecraftText("§7"+landmark).SetHoverText("§6"+hoverText).SetClickEvent("run_command","[分享] "+landmark+"： "+hoverText),
 				MinecraftText("§6§l [☻]").SetClickEvent("run_command",spawnCmd).SetHoverText("§6单击召唤工具人"),
 				MinecraftText("§c§l[☠]").SetClickEvent("run_command",killCmd).SetHoverText("§6单击退出工具人"),
 				MinecraftText("§3§l[✎]").SetClickEvent("suggest_command",renameCmd).SetHoverText("§6单击重命名坐标点"),
