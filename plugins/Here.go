@@ -19,11 +19,11 @@ type Here struct {
 func (h *Here) Handle(c *Command, s lib.Server) {
 	p := GetDim(c.Player, s, h)
 	switch p.Dim {
-	case "0":
+	case "0", `"minecraft:overworld"`:
 		p.Dim = "主世界"
-	case "-1":
+	case "-1", `"minecraft:the_nether"`:
 		p.Dim = "下界"
-	case "1":
+	case "1", `"minecraft:the_end"`:
 		p.Dim = "末地"
 	default:
 		s.Tell(c.Player, "获取维度失败。")

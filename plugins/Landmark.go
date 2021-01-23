@@ -138,9 +138,6 @@ func (lm *Landmark) Handle(c *Command, s lib.Server) {
 			s.Tell(c.Player,"无记录的坐标点！")
 		}
 	case "help":
-		s.Tell(c.Player,"§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l- §6§lLandmark " +
-			"§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l-§6✖§e§l-")
-		s.Tell(c.Player,"§6§o   『枯藤老树昏鸦，小桥流水人家，古道西风瘦马。』 ——《天净沙∙秋思》\\n")
 		s.Tell(c.Player,"§e§l⚑命令指南")
 		s.Tell(c.Player,MinecraftText("!!lm add [end/nether/world] <x> <y> <z> <name> §6添加坐标点\\n").
 			SetClickEvent("suggest_command","!!lm add "),
